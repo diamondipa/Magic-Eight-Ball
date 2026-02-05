@@ -2,47 +2,103 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Magic Eight Ball</title>
     <style>
-        body { font-family: Arial; text-align: center; margin-top: 50px; }
-        input, button { padding: 10px; font-size: 16px; }
-        #answer { margin-top: 20px; font-size: 20px; font-weight: bold; }
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+        #eight-ball {
+            width: 300px;
+            height: 300px;
+            background-color: black;
+            border-radius: 50%;
+            margin: 20px auto;
+            position: relative;
+            color: white;
+        }
+        #answer-window {
+            width: 140px;
+            height: 140px;
+            background-color: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            font-weight: bold;
+        }
+        input, button {
+            padding: 10px;
+            margin: 10px;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
     <h1>Magic Eight Ball</h1>
+    
+    <div id="eight-ball">
+        <div id="answer-window">?</div>
+    </div>
+    
     <input type="text" id="question" placeholder="Ask your question...">
-    <button id="askButton">Ask</button>
-    <div id="answer"></div>
-
+    <button id="ask-button">Ask the Magic Eight Ball</button>
+    
     <script>
-        var answers = [
-            "It is certain", "It is decidedly so", "Without a doubt", "Yes – definitely", "You may rely on it",
-            "As I see it, yes", "Most likely", "Outlook good", "Yes", "Signs point to yes",
-            "Reply hazy, try again", "Ask again later", "Better not tell you now", "Cannot predict now", "Concentrate and ask again",
-            "Don't count on it", "My reply is no", "My sources say no", "Outlook not so good", "Very doubtful"
+        // Array of 20 responses
+        const responses = [
+            "It is certain", "It is decidedly so", "Without a doubt", 
+            "Yes definitely", "You may rely on it", "As I see it, yes",
+            "Most likely", "Outlook good", "Yes", "Signs point to yes",
+            "Reply hazy try again", "Ask again later", "Better not tell you now",
+            "Cannot predict now", "Concentrate and ask again", "Don't count on it",
+            "My reply is no", "My sources say no", "Outlook not so good",
+            "Very doubtful"
         ];
-
-        document.getElementById("askButton").addEventListener("click", function() {
-            var question = document.getElementById("question").value;
-            var answerDiv = document.getElementById("answer");
-
-            if (question === "") {
-                answerDiv.innerText = "Please ask a question!";
+        
+        // Get DOM elements
+        const questionInput = document.getElementById('question');
+        const askButton = document.getElementById('ask-button');
+        const answerWindow = document.getElementById('answer-window');
+        
+        // Add click event listener
+        askButton.addEventListener('click', function() {
+            const question = questionInput.value.trim();
+            
+            // Check if question is empty
+            if (question === '') {
+                answerWindow.textContent = "Please ask a question!";
+                answerWindow.style.color = "red";
                 return;
             }
-
-            var i = 0;
-            var thinkingLoop = setInterval(function() {
-                if (i < 3) {
-                    answerDiv.innerText = "Thinking" + ".".repeat(i+1);
-                    i++;
-                } else {
-                    clearInterval(thinkingLoop);
-                    var randomIndex = Math.floor(Math.random() * answers.length);
-                    answerDiv.innerText = answers[randomIndex];
-                }
-            }, 500);
+            
+            answerWindow.style.color = "black";
+            answerWindow.textContent = "Thinking...";
+            
+            // Generate random number
+            setTimeout(function() {
+                let randomIndex;
+                // Generate random number 0-19
+                randomIndex = Math.floor(Math.random() * 20);
+                
+                // Display the answer
+                answerWindow.textContent = responses[randomIndex];
+            }, 1000);
+        });
+        
+        // Allow Enter key to trigger the button
+        questionInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                askButton.click();
+            }
         });
     </script>
 </body>
